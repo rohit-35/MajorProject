@@ -20,7 +20,6 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-//const Mongo_url = "mongodb://127.0.0.1:27017/wanderlust";
 const dbUrl = process.env.ATLASDB_URL;
 
 main()
@@ -32,7 +31,6 @@ main()
 });
 
 async function main(){
-    //await mongoose.connect(Mongo_url);
     await mongoose.connect(dbUrl);
 }
 
@@ -67,9 +65,6 @@ const sessionOptions = {
     }
 };
 
-/*app.get("/", (req, res) => {
-    res.send("Hi, I am root");
-}); */
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -88,43 +83,13 @@ app.use((req, res, next) => {
     next();
 });
 
-/* app.get("/demouser", async(req, res) =>{
-    let fakeUser = new User({
-        email: "student@gmail.com",
-        username: "delta-student"
-    });
-
-    let registeredUser = await User.register(fakeUser, "helloworld");
-    res.send(registeredUser);
-});  */
-
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
-/* app.get("/testListing", async (req, res) => {
-    let sampleListing = new Listing({
-        title: "My New Villa",
-        description: "By the beach",
-        price: 1200,
-        location: "Calangute, Goa",
-        country: "India"
-    });
-
-    await sampleListing.save();
-    console.log("sample was saved");
-    res.send("successful testing");
-}); */
-
-/*
-app.all("*", (req, res, next) => {
-    next(new ExpressError(404, "Page not Found!"));
-});  */
-
 app.use((err, req, res, next) => {
     let {statusCode=500, message="Something went wrong!"} = err;
     res.status(statusCode).render("error.ejs", {message});
-    //res.status(statusCode).send(message);
 });
 
 app.listen(3004, () => {
